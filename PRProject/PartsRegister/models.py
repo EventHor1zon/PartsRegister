@@ -1,5 +1,6 @@
 from django.db import models
 from hashid_field import HashidAutoField
+from datetime import date
 
 # Create your models here.
 
@@ -22,24 +23,29 @@ class PartType(models.Model):
 class Part(models.Model):
     id = HashidAutoField(primary_key=True)
 
-    identity_number = models.IntegerField(verbose_name="Identity Number" unique=True)
+    identity_number = models.IntegerField(verbose_name="Identity Number", unique=True)
     description = models.TextField(max_length=500, verbose_name="Description")
     name = models.CharField(max_length=256, verbose_name="Name")
     creator = models.CharField(max_length=128, verbose_name="Creator")
-    created_date = models.DateField(auto_now_add=True, verbose_name="Created On")
+    created_date = models.DateField(default=date.today, verbose_name="Created On")
 
     manufacturer = models.CharField(max_length=256, verbose_name="Manufacturer")
     mfg_part_number = models.CharField(max_length=256, verbose_name="MFG Part Number")
     design_status = models.CharField(
-        max_length=36, choices=design_statii, default="ACTIVE", verbose_name="Design Status"
+        max_length=36,
+        choices=design_statii,
+        default="ACTIVE",
+        verbose_name="Design Status",
     )
     sellable = models.BooleanField(verbose_name="Sellable")
     product_line = models.CharField(max_length=128, verbose_name="Product Line")
 
-    part_type = models.ForeignKey(PartType, on_delete=models.CASCADE, verbose_name="Part Type")
+    part_type = models.ForeignKey(
+        PartType, on_delete=models.CASCADE, verbose_name="Part Type"
+    )
 
-    longname = models.CharField(max_length=256)
-    part_number = models.CharField(max_length=16)
+    longname = models.CharField(max_length=256, default="")
+    part_number = models.CharField(max_length=16, default="")
 
     def save(self, *args, **kwargs):
         self.part_number = f"{str(self.part_type.typecode).zfill(2)}-{str(self.identity_number).zfill(5)}"
@@ -67,16 +73,16 @@ class ElectroMechPartInfo(models.Model):
     polarity = models.CharField(max_length=256)
     material = models.CharField(max_length=256)
     power_mW = models.IntegerField(verbose_name="Power mW")
-    temp = models.IntegerField(verbose_name="Temp (ppm/dC)")
-    temp_min = models.IntegerField()
-    temp_max = models.IntegerField()
+    temp = models.IntegerField(verbose_name="Temperature (ppm/dC)")
+    temp_min = models.IntegerField(verbose_name="Temperature (min)")
+    temp_max = models.IntegerField(verbose_name="Temperature (max)")
     tolerance = models.IntegerField(verbose_name="Tolerance (+/- %)")
-    value = models.IntegerField()
-    footprint = models.CharField(max_length=256)
-    voltage = models.IntegerField()
-    quality = models.CharField(max_length=256)
-    measurement_unit = models.CharField(max_length=256)
-    purchase_unit = models.CharField(max_length=256)
+    value = models.IntegerField(verbose_name="Value")
+    footprint = models.CharField(max_length=256, verbose_name="Footprint")
+    voltage = models.IntegerField(verbose_name="Voltage")
+    quality = models.CharField(max_length=256, verbose_name="Quality")
+    measurement_unit = models.CharField(max_length=256, verbose_name="Measurement Unit")
+    purchase_unit = models.CharField(max_length=256, verbose_name="Purchase Unit")
 
     parent = models.ForeignKey(Part, on_delete=models.CASCADE)
 
@@ -85,6 +91,11 @@ class VendorPartInfo(models.Model):
     vendor = models.CharField(max_length=256)
     order_number = models.CharField(max_length=256)
     cost = models.DecimalField(decimal_places=2, max_digits=12)
+
+    parent = models.ForeignKey(Part, on_delete=models.CASCADE, default=None)
+
+
+# Document models
 
 
 class DocumentType(models.Model):
@@ -98,10 +109,10 @@ class Document(models.Model):
     name = models.CharField(max_length=256)
     identity_number = models.IntegerField()
     description = models.CharField(max_length=256)
-    longname = models.CharField(max_length=262)
+    longname = models.CharField(max_length=262, default="")
     author = models.CharField(max_length=128)
     created_date = models.DateField(auto_now_add=True)
-    document_number = models.CharField(max_length=16)
+    document_number = models.CharField(max_length=16, default="")
 
     document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE)
 
