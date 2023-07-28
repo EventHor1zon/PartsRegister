@@ -22,21 +22,21 @@ class PartType(models.Model):
 class Part(models.Model):
     id = HashidAutoField(primary_key=True)
 
-    identity_number = models.IntegerField(unique=True)
-    description = models.TextField(max_length=500)
-    name = models.CharField(max_length=256)
-    creator = models.CharField(max_length=128)
-    created_date = models.DateField(auto_now_add=True)
+    identity_number = models.IntegerField(verbose_name="Identity Number" unique=True)
+    description = models.TextField(max_length=500, verbose_name="Description")
+    name = models.CharField(max_length=256, verbose_name="Name")
+    creator = models.CharField(max_length=128, verbose_name="Creator")
+    created_date = models.DateField(auto_now_add=True, verbose_name="Created On")
 
-    manufacturer = models.CharField(max_length=256)
-    mfg_part_number = models.CharField(max_length=256)
+    manufacturer = models.CharField(max_length=256, verbose_name="Manufacturer")
+    mfg_part_number = models.CharField(max_length=256, verbose_name="MFG Part Number")
     design_status = models.CharField(
-        max_length=36, choices=design_statii, default="ACTIVE"
+        max_length=36, choices=design_statii, default="ACTIVE", verbose_name="Design Status"
     )
-    sellable = models.BooleanField()
-    product_line = models.CharField()
+    sellable = models.BooleanField(verbose_name="Sellable")
+    product_line = models.CharField(max_length=128, verbose_name="Product Line")
 
-    part_type = models.ForeignKey(PartType, on_delete=models.CASCADE)
+    part_type = models.ForeignKey(PartType, on_delete=models.CASCADE, verbose_name="Part Type")
 
     longname = models.CharField(max_length=256)
     part_number = models.CharField(max_length=16)
@@ -84,7 +84,7 @@ class ElectroMechPartInfo(models.Model):
 class VendorPartInfo(models.Model):
     vendor = models.CharField(max_length=256)
     order_number = models.CharField(max_length=256)
-    cost = models.DecimalField()
+    cost = models.DecimalField(decimal_places=2, max_digits=12)
 
 
 class DocumentType(models.Model):
