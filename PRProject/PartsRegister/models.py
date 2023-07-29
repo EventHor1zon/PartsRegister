@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from hashid_field import HashidAutoField
 from datetime import date
 
@@ -18,6 +19,9 @@ class PartType(models.Model):
     typename = models.CharField(max_length=128)
     shortname = models.CharField(max_length=16)
     typecode = models.IntegerField()
+
+    def __str__(self):
+        return f"({self.typecode}-) {self.typename}"
 
 
 class Part(models.Model):
@@ -53,6 +57,9 @@ class Part(models.Model):
 
         super().save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse("part_details", kwargs={"part_id": self.id})
+
 
 ## Part information classes (optional)
 
@@ -73,13 +80,23 @@ class ElectroMechPartInfo(models.Model):
     polarity = models.CharField(max_length=256)
     material = models.CharField(max_length=256)
     power_mW = models.IntegerField(verbose_name="Power mW")
-    temp = models.IntegerField(verbose_name="Temperature (ppm/dC)")
-    temp_min = models.IntegerField(verbose_name="Temperature (min)")
-    temp_max = models.IntegerField(verbose_name="Temperature (max)")
-    tolerance = models.IntegerField(verbose_name="Tolerance (+/- %)")
+    temp = models.DecimalField(
+        decimal_places=3, max_digits=8, verbose_name="Temperature (ppm/dC)"
+    )
+    temp_min = models.DecimalField(
+        decimal_places=3, max_digits=8, verbose_name="Temperature (min)"
+    )
+    temp_max = models.DecimalField(
+        decimal_places=3, max_digits=8, verbose_name="Temperature (max)"
+    )
+    tolerance = models.DecimalField(
+        decimal_places=3, max_digits=8, verbose_name="Tolerance (+/- %)"
+    )
     value = models.IntegerField(verbose_name="Value")
     footprint = models.CharField(max_length=256, verbose_name="Footprint")
-    voltage = models.IntegerField(verbose_name="Voltage")
+    voltage = models.DecimalField(
+        decimal_places=3, max_digits=8, verbose_name="Voltage"
+    )
     quality = models.CharField(max_length=256, verbose_name="Quality")
     measurement_unit = models.CharField(max_length=256, verbose_name="Measurement Unit")
     purchase_unit = models.CharField(max_length=256, verbose_name="Purchase Unit")

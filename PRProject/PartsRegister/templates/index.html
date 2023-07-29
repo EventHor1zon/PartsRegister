@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="centre">
+
+    <h1>Welcome to the AAC-Clydespace Parts and Document Register</h1>
+    <br>
+    <p>
+        This registry contains registered parts and document numbers. You can check out new part numbers and document
+        numbers here.
+    </p>
+    <b>How to use:</b>
+    <p>
+
+        To create a new part number or document number, go to the 'add' pages in the navigation bar above.
+        Once a part is created, you will be taken to the part number page, where you can add electromechanical info,
+        vendor details and online resources, including links to sharepoint documents or bitbucket repositories.
+
+        Regular users cannot delete or modify part numbers.
+    </p>
+
+    <br>
+    <h4>Records</h4>
+    <table style="text-align: 'center'; border-spacing: 5px;">
+        <tr>
+            <th>Part Numbers</th>
+            <td>{{ partnum }}</td>
+        </tr>
+        <tr>
+            <th>Document Numbers</th>
+            <td>{{ docnum }}</td>
+        </tr>
+
+    </table>
+
+</div>
+
+{% endblock %}

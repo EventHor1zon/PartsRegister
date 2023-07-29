@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="partcenter">
+    <div>
+        <h2>
+            {{ part.longname }}
+        </h2>
+    </div>
+    <div class="partbuttons">
+        <div class="partbuttons" id="setdesign">
+            <b>Set Design Status</b>
+        </div>
+        <div class="partbuttons">
+            <b>Set Description</b>
+        </div>
+        <div class="partbuttons">
+            <b>etc</b>
+        </div>
+    </div>
+    <div>
+        <h3>{{ part.name }}</h3>
+
+        <h4>Description</h4>
+        <p>{{ part.description }}</p>
+
+        <h4>Part Type</h4>
+        <p>{{ part.part_type.typename }}</p>
+
+
+    </div>
+    <div class="parttable">
+        <table>
+            <tr>
+                <th>ID #</th>
+                <td>{{ part.identity_number }}</td>
+            </tr>
+            <tr>
+                <th>Created By</th>
+                <td>{{ part.creator }}</td>
+            </tr>
+            <tr>
+                <th>Created On</th>
+                <td>{{ part.created_date }}</td>
+            </tr>
+            <tr>
+                <th>Manufacturer</th>
+                <td>{{ part.manufacturer }}</td>
+            </tr>
+            <tr>
+                <th>MFG Part #</th>
+                <td>{{ part.mfg_part_number }}</td>
+            </tr>
+            <tr>
+                <th>Design Status</th>
+                <td>
+                    {% if part.design_status == "ACTIVE" %}
+                    <bold style="background-color: greenyellow;">{{ part.design_status }}</bold>
+                    {% elif part.design_status == "PENDING" or part.design_status == "INACTIVE" %}
+                    <bold style="background-color: orange;">{{ part.design_status }}</bold>
+                    {% else %}
+                    <bold style="background-color: red;">{{ part.design_status }}</bold>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Sellable</th>
+                <td><input type="checkbox" checked="{{ part.sellable }}" </input></td>
+            </tr>
+            <tr>
+                <th>Product Line</th>
+                <td>{{ part.product_line }}</td>
+            </tr>
+            <tr>
+                <th>Product Line</th>
+                <td>{{ part.product_line }}</td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

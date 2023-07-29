@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="addpart">
+    <h2>Create new Part Number</h2>
+
+    <p>Create a new part number in the repository. The product code (the 5 digit number after the dash) should be
+        generated automatically, so the field is greyed out here. If you need to designate a specific product code, for
+        example when generating multiple part-types for a single part, use the slider to unlock the field.
+    </p>
+    <p>
+        The user should check that the specific product code is unique ahead of assigning it. Even if the code used is
+        valid for this part type, it may already be in use for another part type. You can use the Unique utility in the
+        navigation bar to check that a specific 5 digit value is unique across all parts.
+    </p>
+    <p> Otherwise, this should be left blank and the next available unique product code will be assigned.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <br>
+        <input type="submit" value="Create Part">
+    </form>
+</div>
+{% endblock %}

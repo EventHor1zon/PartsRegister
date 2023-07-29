@@ -1,0 +1,60 @@
+<!DOCTYPE html> {% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>
+        "AAC-Clydespace Parts Register"
+    </title>
+</head>
+
+<body>
+    <div class="main">
+        <div class="banner" style="background-image: url({% static 'images/clipboard.png' %});"></div>
+
+        <div class="navbar">
+            <a href="/">Home</a>
+            <a href="/parts/">Parts</a>
+            <a href="/documents/">Documents</a>
+            <a href="/addpart/">New Part</a>
+            <a href="/adddoc/">New Document</a>
+        </div>
+
+        <div id="center-left" style="background-color: rgb(5, 5, 5);">
+            left centre
+        </div>
+
+        <!-- Content Main -->
+        {% block content %}
+
+        {% endblock %}
+
+        <div id="center-right" style="background-color: rgb(5, 5, 5);">c-right</div>
+
+        <div id="footer">
+            footer
+        </div>
+
+    </div>
+
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var content = this.parentNode.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
