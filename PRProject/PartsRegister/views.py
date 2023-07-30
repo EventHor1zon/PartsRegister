@@ -1,6 +1,7 @@
+from typing import Any, Dict
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import FormView
-from django_tables2.views import SingleTableMixin
+from django_tables2.views import SingleTableMixin, SingleTableView, MultiTableMixin
 from django_filters.views import FilterView
 from django.http import HttpResponse
 from django.views import View
@@ -34,15 +35,95 @@ class PartsView(SingleTableMixin, FilterView):
     Only accepts GET requests
     """
 
-    # def get(self, request):
-    #     table = tables.PartsTable(models.Part.objects.all())
-    #     table.paginate(page=request.GET.get("page", 1), per_page=100)
-    #     return render(request, "parts.html", {"table": table})
     table_class = tables.PartsTable
     table_data = models.Part.objects.all().order_by("created_date")
     model = models.Part
     template_name = "parts.html"
     paginate_by = 50
+
+
+class PartDetail(FormView, MultiTableMixin):
+    """did a bit of hacking to do multiple forms on a single page
+    we don't actually use the built-in form_class but populate it
+    because it can't be none.
+    """
+
+    template_name = "part_details.html"
+    em_form = forms.NewEMInfo
+    vendor_form = forms.NewVendor
+    resource_form = forms.NewResource
+    form_class = forms.NewEMInfo
+    # would be nice to get multiple tables in to save on
+    # html so try MultiTableMixin...
+    tables = [
+        tables.PartsTable,
+        tables.VendorInfoTable,
+        tables.ResourceInfoTable,
+        tables.EmInfoTable,
+    ]
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["resource_form"] = self.resource_form
+        context["em_form"] = self.em_form
+        context["vendor_form"] = self.vendor_form
+        return context
+
+    def get(self, request, part_id):
+        part = get_object_or_404(models.Part, id=part_id)
+        context = self.get_context_data()
+        context["part"] = part
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        """Why have a single form on a page?
+        Wouldn't that be the easy and sensible thing to do?
+        Yes but I have an idea and I think it's cool so now we're doing
+        all this because it's not supported out the box.
+        """
+        form = self.get_form_from_postdata(request)
+        if form is None:
+            return HttpResponse("Invalid form type", {"status_code": 500})
+
+        if form.is_valid():
+            parent = get_object_or_404(models.Part, id=request.POST["parent"])
+            model = self.get_model_from_postdata(request)
+            model_data = {
+                k: v
+                for k, v in request.POST.items()
+                if k != "parent" and k != "csrfmiddlewaretoken"
+            }
+            model_data["parent"] = parent
+            new = model(**model_data)
+            try:
+                new.save()
+                ctx = self.get_context_data()
+                ctx["part"] = parent
+                ctx["status"] = "Success!"
+                return self.render_to_response(ctx)
+            except Exception as e:
+                print(e)
+                return HttpResponse("something derped")
+
+    def get_model_from_postdata(self, request):
+        if "vendor" in request.POST.keys():
+            model = models.VendorPartInfo
+        elif "url" in request.POST.keys():
+            model = models.PartResource
+        elif "temp" in request.POST.keys():
+            model = models.ElectroMechPartInfo
+        return model
+
+    def get_form_from_postdata(self, request):
+        if "vendor" in request.POST.keys():
+            form = forms.NewVendor(request.POST)
+        elif "url" in request.POST.keys():
+            form = forms.NewResource(request.POST)
+        elif "temp" in request.POST.keys():
+            form = forms.NewEMInfo(request.POST)
+        else:
+            form = None
+        return form
 
 
 class AddPartView(FormView):

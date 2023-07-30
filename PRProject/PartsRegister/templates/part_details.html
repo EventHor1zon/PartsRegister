@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load render_table from django_tables2 %}
 {% block content %}
 
 <div class="partcenter">
@@ -8,15 +9,51 @@
         </h2>
     </div>
     <div class="partbuttons">
-        <div class="partbuttons" id="setdesign">
-            <b>Set Design Status</b>
+        <div class="partbutton" id="vendor">
+            <b>Add Vendor</b>
         </div>
-        <div class="partbuttons">
-            <b>Set Description</b>
+        <div class=" partbutton" id="resource">
+            <b>Add Resource</b>
         </div>
-        <div class="partbuttons">
-            <b>etc</b>
+        <div class="partbutton" id="em">
+            <b>Add EM info</b>
         </div>
+    </div>
+    <div class="formPopup" id="vendor_form">
+        <form action="#" method="post" class="formContainer">
+            {% csrf_token %}
+            <table>
+                {{ vendor_form.as_table }}
+            </table>
+            <br>
+            <input id="id_parent" name="parent" type="text" value="{{ part.id }}" style="display: none">
+            <input type="submit" class="btn submit" value="submit">
+            <button type="button" class="btn cancel" onclick="closeForm()">Back</button>
+        </form>
+    </div>
+    <div class="formPopup" id="resource_form">
+        <form action="#" method="post" class="formContainer">
+            {% csrf_token %}
+            <table>
+                {{ resource_form.as_table }}
+            </table>
+            <br>
+            <input id="id_parent" name="parent" type="text" value="{{ part.id }}" style="display: none">
+            <input type="submit" class="btn submit" value="create">
+            <button type="button" class="btn cancel" onclick="closeForm()">Back</button>
+        </form>
+    </div>
+    <div class="formPopup" id="em_form">
+        <form action="#" method="post" class="formContainer">
+            {% csrf_token %}
+            <table>
+                {{ em_form.as_table }}
+            </table>
+            <br>
+            <input id="id_parent" name="parent" type="text" value="{{ part.id }}" style="display: none">
+            <input type="submit" class="btn submit" value="create">
+            <button type="button" class="btn cancel" onclick="closeForm()">Back</button>
+        </form>
     </div>
     <div>
         <h3>{{ part.name }}</h3>
@@ -26,11 +63,9 @@
 
         <h4>Part Type</h4>
         <p>{{ part.part_type.typename }}</p>
-
-
     </div>
     <div class="parttable">
-        <table>
+        <!-- <table>
             <tr>
                 <th>ID #</th>
                 <td>{{ part.identity_number }}</td>
@@ -75,9 +110,75 @@
                 <th>Product Line</th>
                 <td>{{ part.product_line }}</td>
             </tr>
-        </table>
+        </table> -->
+        {% render_table table %}
+
+    </div>
+
+    <div class="partextras">
+
+        <button type="button" class="collapsible">Vendors</button>
+        <div class="content">
+            {% if part.vendorpartinfo_set %}
+            {% for vinfo in part.vendorpartinfo_set.all %}
+            {% render_table tables_1 %}
+            {% endfor %}
+            {% endif %}
+        </div>
+        <button type="button" class="collapsible">EM Info</button>
+        <div class="content">
+            {% if part.electromechanicalpartinfo_set %}
+            {% for eminfo in part.electromechanicalpartinfo.all %}
+            {% render_table tables_1 %}
+            {% endfor %}
+            {% endif %}
+        </div>
+        <button type="button" class="collapsible">Resources</button>
+        <div class="content">
+            {% if part.electromechanicalpartinfo %}
+            {% for eminfo in part.electromechanicalpartinfo.all %}
+            {% render_table tables_1 %}
+            {% endfor %}
+            {% endif %}
+        </div>
     </div>
 
 </div>
+
+<script>
+    var form_btns = document.getElementsByClassName("partbutton");
+    var coll = document.getElementsByClassName("collapsible");
+
+    function closeForm() {
+        var forms = document.getElementsByClassName("formPopup");
+        for (var i = 0; i < forms.length; i++) {
+            if (forms[i].style.display == "block") {
+                forms[i].style.display = "none";
+            }
+        }
+    }
+
+    for (var i = 0; i < form_btns.length; i++) {
+        form_btns[i].onclick = function (e) {
+            var source = e.originalTarget.id;
+            var form_name = source + "_form"
+            closeForm()
+            document.getElementById(form_name).style.display = "block";
+        }
+    }
+
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    } 
+</script>
 
 {% endblock %}

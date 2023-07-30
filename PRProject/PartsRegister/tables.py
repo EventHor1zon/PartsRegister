@@ -34,4 +34,37 @@ class PartsTable(tables.Table):
 
 class SinglePartTable(tables.Table):
     class Meta:
-        models.Part
+        model = models.Part
+        exclude = {
+            "identity_number",
+            "description",
+            "part_type",
+            "longname",
+            "part_number",
+        }
+
+    def render_design_status(self, value):
+        if value == "ACTIVE":
+            return f'<bold style="background-color: greenyellow;">{value}</b>'
+        elif value == "PENDING":
+            return f'<bold style="background-color: orange;">{value}</bold>'
+        else:
+            return f'<bold style="background-color: red;">{value}</bold>'
+
+
+class EmInfoTable(tables.Table):
+    class Meta:
+        model = models.ElectroMechPartInfo
+        exclude = {"parent"}
+
+
+class VendorInfoTable(tables.Table):
+    class Meta:
+        model = models.VendorPartInfo
+        exclude = {"parent"}
+
+
+class ResourceInfoTable(tables.Table):
+    class Meta:
+        model = models.PartResource
+        exclude = {"parent"}

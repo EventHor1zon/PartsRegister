@@ -51,6 +51,9 @@ class Part(models.Model):
     longname = models.CharField(max_length=256, default="")
     part_number = models.CharField(max_length=16, default="")
 
+    def __str__(self):
+        return self.longname
+
     def save(self, *args, **kwargs):
         self.part_number = f"{str(self.part_type.typecode).zfill(2)}-{str(self.identity_number).zfill(5)}"
         self.longname = f"{str(self.part_type.typecode).zfill(2)}-{str(self.identity_number).zfill(5)} {self.name}"

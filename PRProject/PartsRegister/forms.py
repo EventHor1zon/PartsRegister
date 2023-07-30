@@ -18,7 +18,25 @@ class NewPartForm(forms.ModelForm):
         ]
 
 
-# l    name = forms.CharField(max_length=256)
+class NewResource(forms.ModelForm):
+    class Meta:
+        model = models.PartResource
+        exclude = ["parent"]
+
+
+class NewEMInfo(forms.ModelForm):
+    class Meta:
+        model = models.ElectroMechPartInfo
+        exclude = ["parent"]
+
+
+class NewVendor(forms.ModelForm):
+    class Meta:
+        model = models.VendorPartInfo
+        exclude = ["parent"]
+
+
+#     name = forms.CharField(max_length=256)
 #     description = forms.CharField(max_length=500)
 #     creator = forms.CharField(max_length=128)
 #     manufacturer = forms.CharField(max_length=256)
