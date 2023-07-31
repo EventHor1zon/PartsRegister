@@ -14,14 +14,14 @@ Dev.
 
 TODOs:
 
-    - Parts table format
-    - Parts add unique value
-    - Parts get next unique value
+    - Add part info     [done]
+        - vendor info   [done]
+        - em info       [done]
+        - online resource [done]
+    - Parts add unique value    [done]
+    - Parts get next unique value   [done]
     - Document types
     - Document add form
-    - Add part info
-        - vendor info
-        - em info
-        - online resource
-    - pagination parts table
+    - Parts table format
+    - pagination parts table 
     - document table
