@@ -4,6 +4,8 @@ from . import models
 
 
 class NewPartForm(forms.ModelForm):
+    identity_number = forms.IntegerField(max_value=99999, required=False)
+
     class Meta:
         model = models.Part
         fields = [

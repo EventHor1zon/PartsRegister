@@ -3,8 +3,10 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import FormView
 from django_tables2.views import SingleTableMixin, SingleTableView, MultiTableMixin
 from django_filters.views import FilterView
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
+from django.forms import Form
+from django.urls import reverse
 
 from . import models
 from . import tables
@@ -92,7 +94,6 @@ class PartDetail(FormView):
             # sanitise checkboxes from 'on' to True
             self.convert_boolean_form(model_data)
             model_data["parent"] = parent
-            print(model_data)
             new = model(**model_data)
             try:
                 new.save()
@@ -102,7 +103,7 @@ class PartDetail(FormView):
                 return self.render_to_response(ctx)
             except Exception as e:
                 print(e)
-                return HttpResponse("something derped")
+                return HttpResponse(f"something derped: {e}")
 
     def convert_boolean_form(self, data):
         for k, v in data.items():
@@ -139,3 +140,38 @@ class AddPartView(FormView):
 
     template_name = "addpart.html"
     form_class = forms.NewPartForm
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests: instantiate a form instance with the passed
+        POST variables and then check if it's valid.
+        """
+        form = self.get_form()
+        if form.is_valid():
+            print(form.cleaned_data)
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form: Form):
+        clean = form.cleaned_data
+        if "idenitity_number" not in clean.keys() or clean["identity_number"] is None:
+            clean["identity_number"] = models.get_next_common_partcode(
+                clean["part_type"].typecode
+            )
+        elif clean["identity_number"] > models.get_next_unique_partcode():
+            # this will prevent users stepping forward in the database
+            # they can explicitly step backwards through the global part-number
+            # database so that you can create multiple parts with the same id number
+            # i.e 25-10143, 18-10143, for different parts using the same product
+            # however this should be done with some care. If for instance, a person
+            # checks out a unique global part number (e.g 10143) and uses this code
+            # to check out a part of specific type, the next part number assigned
+            # will be last unique + 1. Giving users freedom means
+            # giving them freedom to mess up.
+            return HttpResponse("Invalid identity number!")
+        else:
+            obj = models.Part(**clean)
+            obj.save()
+            pk = obj.id
+        return HttpResponseRedirect(reverse("parts", args=(pk,)))

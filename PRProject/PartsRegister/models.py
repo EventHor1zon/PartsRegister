@@ -147,3 +147,52 @@ class Document(models.Model):
         self.longname = f"{self.document_type.prefix}-{str(self.identity_number).zfill(5)} {self.name}"
 
         super().save(*args, **kwargs)
+
+
+def get_next_unique_partcode():
+    """returns the next unique part number
+    across all part types.
+    """
+    base = 0
+    for item in Part.objects.all():
+        if item.identity_number > base:
+            base = item.identity_number
+    return base + 1
+
+
+def get_next_common_partcode(typecode: int):
+    """get the next unique part number in the set of
+    part types indicated by typecode
+    """
+    base = 0
+    for item in Part.objects.filter(part_type__typecode__exact=typecode):
+        if item.identity_number > base:
+            base = item.identity_number
+    return base + 1
+
+
+def get_lowest_unique_partcode():
+    """gets the first globally (all types) available
+    identity number
+    """
+    base = 0
+    qs = Part.objects.all()
+    for item in qs:
+        if item.identity_number == base:
+            # increment base until we have
+            # a free unique number
+            base = base + 1
+            break
+    return base
+
+
+def get_lowest_unique_partcode_by_type(typecode: int):
+    base = 0
+    qs = Part.objects.filter(part_type__typecode__exact=typecode)
+    for item in qs:
+        if item.identity_number == base:
+            # increment base until we have
+            # a free unique number
+            base = base + 1
+            break
+    return base
