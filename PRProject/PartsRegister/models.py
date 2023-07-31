@@ -69,17 +69,21 @@ class Part(models.Model):
 
 class PartResource(models.Model):
     name = models.CharField(max_length=256)
+    description = models.CharField(max_length=500, default="")
     url = models.URLField()
 
     parent = models.ForeignKey(Part, on_delete=models.CASCADE)
 
 
 class ElectroMechPartInfo(models.Model):
-    degild = models.BooleanField(verbose_name="De-Gild")
-    pretin = models.BooleanField(verbose_name="Pre-Tin")
-    reball = models.BooleanField(verbose_name="Re-Ball")
-    pasted = models.BooleanField(verbose_name="Pasted")
-    staked = models.BooleanField(verbose_name="Staked")
+    profile_name = models.CharField(
+        max_length=256, verbose_name="Profile Name", default=""
+    )
+    degild = models.BooleanField(verbose_name="De-Gild", default=False)
+    pretin = models.BooleanField(verbose_name="Pre-Tin", default=False)
+    reball = models.BooleanField(verbose_name="Re-Ball", default=False)
+    pasted = models.BooleanField(verbose_name="Pasted", default=False)
+    staked = models.BooleanField(verbose_name="Staked", default=False)
     polarity = models.CharField(max_length=256)
     material = models.CharField(max_length=256)
     power_mW = models.IntegerField(verbose_name="Power mW")

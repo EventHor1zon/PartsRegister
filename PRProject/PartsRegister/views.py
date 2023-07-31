@@ -42,7 +42,7 @@ class PartsView(SingleTableMixin, FilterView):
     paginate_by = 50
 
 
-class PartDetail(FormView, MultiTableMixin):
+class PartDetail(FormView):
     """did a bit of hacking to do multiple forms on a single page
     we don't actually use the built-in form_class but populate it
     because it can't be none.
@@ -53,14 +53,9 @@ class PartDetail(FormView, MultiTableMixin):
     vendor_form = forms.NewVendor
     resource_form = forms.NewResource
     form_class = forms.NewEMInfo
+
     # would be nice to get multiple tables in to save on
     # html so try MultiTableMixin...
-    tables = [
-        tables.PartsTable,
-        tables.VendorInfoTable,
-        tables.ResourceInfoTable,
-        tables.EmInfoTable,
-    ]
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -81,6 +76,7 @@ class PartDetail(FormView, MultiTableMixin):
         Yes but I have an idea and I think it's cool so now we're doing
         all this because it's not supported out the box.
         """
+        print(request.POST)
         form = self.get_form_from_postdata(request)
         if form is None:
             return HttpResponse("Invalid form type", {"status_code": 500})
@@ -93,7 +89,10 @@ class PartDetail(FormView, MultiTableMixin):
                 for k, v in request.POST.items()
                 if k != "parent" and k != "csrfmiddlewaretoken"
             }
+            # sanitise checkboxes from 'on' to True
+            self.convert_boolean_form(model_data)
             model_data["parent"] = parent
+            print(model_data)
             new = model(**model_data)
             try:
                 new.save()
@@ -104,6 +103,12 @@ class PartDetail(FormView, MultiTableMixin):
             except Exception as e:
                 print(e)
                 return HttpResponse("something derped")
+
+    def convert_boolean_form(self, data):
+        for k, v in data.items():
+            if v == "on":
+                data[k] = True
+        return
 
     def get_model_from_postdata(self, request):
         if "vendor" in request.POST.keys():

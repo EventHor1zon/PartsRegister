@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load render_table from django_tables2 %}
+{% load formattingtags %}
 {% block content %}
 
 <div class="partcenter">
@@ -65,7 +66,7 @@
         <p>{{ part.part_type.typename }}</p>
     </div>
     <div class="parttable">
-        <!-- <table>
+        <table>
             <tr>
                 <th>ID #</th>
                 <td>{{ part.identity_number }}</td>
@@ -110,8 +111,7 @@
                 <th>Product Line</th>
                 <td>{{ part.product_line }}</td>
             </tr>
-        </table> -->
-        {% render_table table %}
+        </table>
 
     </div>
 
@@ -121,24 +121,133 @@
         <div class="content">
             {% if part.vendorpartinfo_set %}
             {% for vinfo in part.vendorpartinfo_set.all %}
-            {% render_table tables_1 %}
+            <table>
+                <tr>
+                    <th>Vendor</th>
+                    <td>{{ vinfo.vendor }}</td>
+                </tr>
+                <tr>
+                    <th>Order Number</th>
+                    <td>{{ vinfo.order_number }}</td>
+                </tr>
+                <tr>
+                    <th>Cost</th>
+                    <td>{{ vinfo.cost }}</td>
+                </tr>
+            </table>
             {% endfor %}
+            {% else %}
+            <p>No Vendor Info associated with this part</p>
             {% endif %}
         </div>
         <button type="button" class="collapsible">EM Info</button>
         <div class="content">
-            {% if part.electromechanicalpartinfo_set %}
-            {% for eminfo in part.electromechanicalpartinfo.all %}
-            {% render_table tables_1 %}
+            {% if part.electromechpartinfo_set %}
+            {% for eminfo in part.electromechpartinfo_set.all %}
+            <table>
+                <tr>
+                    <th>Profile Name</th>
+                    <td>{{ eminfo.profile_name }}</td>
+                </tr>
+                <tr>
+                    <th>Material</th>
+                    <td>{{ eminfo.material }}</td>
+                </tr>
+                <tr>
+                    <th>Polarity</th>
+                    <td>{{ eminfo.polarity }}</td>
+                </tr>
+                <tr>
+                    <th>Voltage</th>
+                    <td>{{ eminfo.voltage }}</td>
+                </tr>
+                <tr>
+                    <th>Measurement Unit</th>
+                    <td>{{ eminfo.measurement_unit }}</td>
+                </tr>
+                <tr>
+                    <th>Purchase Unit</th>
+                    <td>{{ eminfo.purchase_unit }}</td>
+                </tr>
+                <tr>
+                    <th>Value</th>
+                    <td>{{ eminfo.value }}</td>
+                </tr>
+                <tr>
+                    <th>Power (mW)</th>
+                    <td>{{ eminfo.power_mW }}</td>
+                </tr>
+                <tr>
+                    <th>Tolerance</th>
+                    <td>{{ eminfo.tolerance }}</td>
+                </tr>
+                <tr>
+                    <th>Quality</th>
+                    <td>{{ eminfo.quality }}</td>
+                </tr>
+                <tr>
+                    <th>Temperature (ppm/°C)</th>
+                    <td>{{ eminfo.temp }}</td>
+                </tr>
+                <tr>
+                    <th>Temperature Max (°C)</th>
+                    <td>{{ eminfo.temp_max }}</td>
+                </tr>
+                <tr>
+                    <th>Temperature Min (°C)</th>
+                    <td>{{ eminfo.temp_min }}</td>
+                </tr>
+                <tr>
+                    <th>Footprint</th>
+                    <td>{{ eminfo.footprint }}</td>
+                </tr>
+                <tr>
+                    <th>De-Gild</th>
+                    <td>{{ eminfo.degild|prettybool }}</td>
+                </tr>
+                <tr>
+                    <th>Pre-Tin</th>
+                    <td>{{ eminfo.pretin|prettybool }}</td>
+                </tr>
+                <tr>
+                    <th>Re-Ball</th>
+                    <td>{{ eminfo.reball|prettybool }}</td>
+                </tr>
+                <tr>
+                    <th>Pasted</th>
+                    <td>{{ eminfo.pasted|prettybool }}</td>
+                </tr>
+                <tr>
+                    <th>Staked</th>
+                    <td>{{ eminfo.staked|prettybool }}</td>
+                </tr>
+            </table>
             {% endfor %}
+            {% else %}
+            <p>No Electro/Mechanical profiles associated with this part</p>
             {% endif %}
         </div>
         <button type="button" class="collapsible">Resources</button>
         <div class="content">
-            {% if part.electromechanicalpartinfo %}
-            {% for eminfo in part.electromechanicalpartinfo.all %}
-            {% render_table tables_1 %}
+            {% if part.partresource_set %}
+            {% for resinfo in part.partresource_set.all %}
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <td>{{ resinfo.name }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ resinfo.description }}</td>
+                </tr>
+                <tr>
+                    <th>URL</th>
+                    <td>{{ resinfo.url }}</td>
+                </tr>
+            </table>
             {% endfor %}
+            {% else %}
+            <p>No Resources associated with this part</p>
             {% endif %}
         </div>
     </div>
