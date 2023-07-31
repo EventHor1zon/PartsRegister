@@ -27,7 +27,7 @@ class PartType(models.Model):
 class Part(models.Model):
     id = HashidAutoField(primary_key=True)
 
-    identity_number = models.IntegerField(verbose_name="Identity Number", unique=True)
+    identity_number = models.IntegerField(verbose_name="Identity Number")
     description = models.TextField(max_length=500, verbose_name="Description")
     name = models.CharField(max_length=256, verbose_name="Name")
     creator = models.CharField(max_length=128, verbose_name="Creator")

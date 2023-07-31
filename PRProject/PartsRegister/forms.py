@@ -17,6 +17,7 @@ class NewPartForm(forms.ModelForm):
             "design_status",
             "product_line",
             "part_type",
+            "sellable",
         ]
 
 

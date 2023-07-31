@@ -156,22 +156,21 @@ class AddPartView(FormView):
     def form_valid(self, form: Form):
         clean = form.cleaned_data
         if "idenitity_number" not in clean.keys() or clean["identity_number"] is None:
-            clean["identity_number"] = models.get_next_common_partcode(
+            clean["identity_number"] = models.get_lowest_unique_partcode_by_type(
                 clean["part_type"].typecode
             )
-        elif clean["identity_number"] > models.get_next_unique_partcode():
+        elif clean["identity_number"] > models.get_lowest_unique_partcode():
             # this will prevent users stepping forward in the database
             # they can explicitly step backwards through the global part-number
             # database so that you can create multiple parts with the same id number
-            # i.e 25-10143, 18-10143, for different parts using the same product
-            # however this should be done with some care. If for instance, a person
-            # checks out a unique global part number (e.g 10143) and uses this code
-            # to check out a part of specific type, the next part number assigned
-            # will be last unique + 1. Giving users freedom means
-            # giving them freedom to mess up.
+            # i.e 25-10143, 18-10143.
+            #
+            # fuckit, put in smarter lowest unique functions instead of allowing users to break
+            # the database by checking out a part with value 99999 lol.
             return HttpResponse("Invalid identity number!")
-        else:
-            obj = models.Part(**clean)
-            obj.save()
-            pk = obj.id
-        return HttpResponseRedirect(reverse("parts", args=(pk,)))
+        obj = models.Part(**clean)
+        obj.save()
+        part_id = obj.id
+        return HttpResponseRedirect(
+            reverse("PartsRegister:part_details", kwargs={"part_id": part_id})
+        )

@@ -101,11 +101,7 @@
             </tr>
             <tr>
                 <th>Sellable</th>
-                <td><input type="checkbox" checked="{{ part.sellable }}" </input></td>
-            </tr>
-            <tr>
-                <th>Product Line</th>
-                <td>{{ part.product_line }}</td>
+                <td>{{ part.sellable|prettybool }}</td>
             </tr>
             <tr>
                 <th>Product Line</th>
@@ -119,7 +115,7 @@
 
         <button type="button" class="collapsible">Vendors</button>
         <div class="content">
-            {% if part.vendorpartinfo_set %}
+            {% if part.vendorpartinfo_set|length > 0 %}
             {% for vinfo in part.vendorpartinfo_set.all %}
             <table>
                 <tr>
@@ -142,7 +138,7 @@
         </div>
         <button type="button" class="collapsible">EM Info</button>
         <div class="content">
-            {% if part.electromechpartinfo_set %}
+            {% if part.electromechpartinfo_set|length > 0 %}
             {% for eminfo in part.electromechpartinfo_set.all %}
             <table>
                 <tr>
@@ -229,7 +225,7 @@
         </div>
         <button type="button" class="collapsible">Resources</button>
         <div class="content">
-            {% if part.partresource_set %}
+            {% if part.partresource_set|length > 0 %}
             {% for resinfo in part.partresource_set.all %}
             <table>
                 <tr>
