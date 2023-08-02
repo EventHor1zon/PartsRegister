@@ -68,3 +68,9 @@ class ResourceInfoTable(tables.Table):
     class Meta:
         model = models.PartResource
         exclude = {"parent"}
+
+
+class DocumentTable(tables.Table):
+    class Meta:
+        model = models.Document
+        exclude = {"description", "longname"}

@@ -11,4 +11,6 @@ urlpatterns = [
         name="part_details",
     ),
     path("addpart/", views.AddPartView.as_view(), name="addpart"),
+    path("documents/", views.DocsView.as_view(), name="documents"),
+    # path("adddoc/", views.DocsView.as_view(), name="documents"),
 ]

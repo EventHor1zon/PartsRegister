@@ -11,6 +11,7 @@ from django.urls import reverse
 from . import models
 from . import tables
 from . import forms
+from . import filters
 
 # Create your views here.
 
@@ -31,6 +32,19 @@ def part_view(request, part_id):
     return render(request, "part_details.html", {"part": part})
 
 
+class DocsView(SingleTableMixin, FilterView):
+    """
+    class to handle the main table of the document register
+    Only accepts GET requests
+    """
+
+    filterset_class = filters.PartFilter
+    table_class = tables.DocumentTable
+    # table_data = models.Document.objects.all().order_by("created_date")
+    template_name = "documents.html"
+    paginate_by = 50
+
+
 class PartsView(SingleTableMixin, FilterView):
     """
     class to handle the main table of the parts register
@@ -38,9 +52,10 @@ class PartsView(SingleTableMixin, FilterView):
     """
 
     table_class = tables.PartsTable
-    table_data = models.Part.objects.all().order_by("created_date")
+    # table_data = models.Part.objects.all().order_by("created_date")
     model = models.Part
     template_name = "parts.html"
+    filterset_class = filters.PartFilter
     paginate_by = 50
 
 

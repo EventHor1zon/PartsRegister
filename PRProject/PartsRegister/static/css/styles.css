@@ -3,20 +3,6 @@ body {
     background-color: white;
 }
 
-th {
-    text-align: center;
-}
-
-tr {
-    border-bottom: 1px solid #00a2fa;
-}
-
-.table {
-    text-align: center;
-    border-bottom: 1px solid #00a2fa;
-    padding-top: 1%;
-}
-
 .navbar {
     overflow: hidden;
     grid-column-start: 1;
@@ -55,14 +41,12 @@ tr {
     overflow: visible;
     grid-column-start: 1;
     grid-column-end: 4;
-    min-height: 5%;
     align-content: right;
 }
 
 .footer {
     grid-column-start: 1;
     grid-column-end: 4;
-    min-height: 5%;
 }
 
 .main {
@@ -75,6 +59,34 @@ tr {
     height: 100%;
 }
 
+/* css for main parts table **/
+
+.table-container a {
+    color: black;
+    text-decoration: none;
+}
+
+.table-container table {
+    width: 100%;
+    border-spacing: 5px;
+}
+
+.table-container th {
+    background-color: #00a2fa;
+    padding: 2px;
+    border-style: none none solid solid;
+    border-color: black;
+    border-width: thin;
+}
+
+.table-container th,
+td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 /* display css for Part details page */
 .partcenter {
     display: grid;
@@ -82,8 +94,6 @@ tr {
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 10px;
     grid-row-gap: 10px;
-    /* width: 100%;
-    height: 100%; */
 }
 
 .partbuttons {
@@ -115,16 +125,16 @@ tr {
     width: 70%;
 }
 
-.parttable table {
+.partcenter table {
     width: 100%;
 }
 
-.parttable th {
+.partcenter th {
     text-align: left;
     background-color: #00a2fa;
 }
 
-.parttable td {
+.partcenter td {
     text-align: right;
     border-style: none none solid none;
     border-color: #00a2fa;
@@ -149,12 +159,6 @@ tr {
 
 .addpart th {
     text-align: left;
-}
-
-.addpart tr {
-    align-content: right;
-    align-items: right;
-    align-self: right;
 }
 
 .addpart textarea {

@@ -1,19 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<div id="center-left">
+    left centre
+</div>
+
 <div class="addpart">
     <h2>Create new Part Number</h2>
 
-    <p>Create a new part number in the repository. The product code (the 5 digit number after the dash) should be
-        generated automatically, so the field is greyed out here. If you need to designate a specific product code, for
-        example when generating multiple part-types for a single part, use the slider to unlock the field.
+    <p>Create a new part number in the repository. The identity number (the 5 digit number after the dash) can be
+        automatically generated. If you only require a single part number, leave this value blank. If you need to
+        designate a specific product code (for example when generating multiple part-types for a single part) you can
+        supply a unique value here.
     </p>
     <p>
         The user should check that the specific product code is unique ahead of assigning it. Even if the code used is
         valid for this part type, it may already be in use for another part type. You can use the Unique utility in the
-        navigation bar to check that a specific 5 digit value is unique across all parts.
+        navigation bar to find the next unique value across all part types.
     </p>
-    <p> Otherwise, this should be left blank and the next available unique product code will be assigned.</p>
 
     <form method="post">
         {% csrf_token %}

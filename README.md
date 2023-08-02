@@ -14,14 +14,16 @@ Dev.
 
 TODOs:
 
-    - Add part info     [done]
-        - vendor info   [done]
-        - em info       [done]
-        - online resource [done]
-    - Parts add unique value    [done]
+    - Add part info                 [done]
+        - vendor info               [done]
+        - em info                   [done]
+        - online resource           [done]
+    - Parts add unique value        [done]
     - Parts get next unique value   [done]
+    - Parts table format
     - Document types
     - Document add form
-    - Parts table format
     - pagination parts table 
     - document table
+    - script to move spreadsheet over
+    - Generate unique id page
