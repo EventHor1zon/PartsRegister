@@ -135,7 +135,7 @@ class Document(models.Model):
     description = models.CharField(max_length=256)
     longname = models.CharField(max_length=262, default="")
     author = models.CharField(max_length=128)
-    created_date = models.DateField(auto_now_add=True)
+    created_date = models.DateField(default=date.today, verbose_name="Created On")
     document_number = models.CharField(max_length=16, default="")
 
     document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE)

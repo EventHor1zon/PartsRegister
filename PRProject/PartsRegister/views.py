@@ -38,9 +38,8 @@ class DocsView(SingleTableMixin, FilterView):
     Only accepts GET requests
     """
 
-    filterset_class = filters.PartFilter
+    filterset_class = filters.DocFilter
     table_class = tables.DocumentTable
-    # table_data = models.Document.objects.all().order_by("created_date")
     template_name = "documents.html"
     paginate_by = 50
 

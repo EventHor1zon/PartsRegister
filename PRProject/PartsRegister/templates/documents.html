@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load render_table from django_tables2 %}
+{% block content %}
+
+<div id="center-left">
+    left centre
+</div>
+
+<div class="partscenter">
+
+    <h2>Document Register</h2>
+
+    <p>This is the document register table. To go to the document information page, click the part number.</p>
+
+    {% render_table table %}
+
+</div>
+
+{% endblock %}
