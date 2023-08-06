@@ -30,7 +30,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #       SECRET_KEY
 #       HASHID_FIELD_SALT
 #       DEBUG (optional)
-print(os.path.join(BASE_DIR, ".env"))
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Quick-start development settings - unsuitable for production

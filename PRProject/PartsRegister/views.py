@@ -92,7 +92,6 @@ class PartDetail(FormView):
         Yes but I have an idea and I think it's cool so now we're doing
         all this because it's not supported out the box.
         """
-        print(request.POST)
         form = self.get_form_from_postdata(request)
         if form is None:
             return HttpResponse("Invalid form type", {"status_code": 500})
@@ -116,7 +115,6 @@ class PartDetail(FormView):
                 ctx["status"] = "Success!"
                 return self.render_to_response(ctx)
             except Exception as e:
-                print(e)
                 return HttpResponse(f"something derped: {e}")
 
     def convert_boolean_form(self, data):
@@ -162,7 +160,6 @@ class AddPartView(FormView):
         """
         form = self.get_form()
         if form.is_valid():
-            print(form.cleaned_data)
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
